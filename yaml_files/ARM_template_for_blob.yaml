@@ -1,0 +1,46 @@
+trigger:
+- none
+
+pool:
+  vmImage: 'windows-latest'
+
+stages:
+  - stage: Dev
+    displayName: 'Dev'
+    variables:
+      - group: ARM
+    jobs:
+      - deployment: PreRequisites
+        displayName: 'Deploy Pre-Requisite Infrastructure'
+        environment: ARM
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+                - task: AzureResourceManagerTemplateDeployment@3
+                  displayName: 'Deploy resource group'
+                  inputs:
+                    deploymentScope: 'Subscription'
+                    azureResourceManagerConnection: 'sp-devops-pipeline'
+                    subscriptionId: '$(VAR_ARM.Subscription.Id)'
+                    location: '$(VAR_ARM.ResourceGroup.Location)'
+                    templateLocation: 'Linked artifact'
+                    csmFile: 'Platform/ARM-Templates/ResourceGroup/template.json'
+                    csmParametersFile: 'Platform/ARM-Templates/ResourceGroup/parameter.json'
+                    overrideParameters: '-rgLocation "$(VAR_ARM.ResourceGroup.Location)" -rgName "$(VAR_ARM.ResourceGroup.Name)"'
+                    deploymentMode: 'Incremental'
+                - task: AzureResourceManagerTemplateDeployment@3
+                  displayName: 'Deploy blob storage account for storing Terraform states'
+                  inputs:
+                    deploymentScope: 'Resource Group'
+                    azureResourceManagerConnection: 'sp-devops-pipeline'
+                    subscriptionId: '$(VAR_ARM.Subscription.Id)'
+                    action: 'Create Or Update Resource Group'
+                    resourceGroupName: '$(VAR_ARM.ResourceGroup.Name)'
+                    location: '$(VAR_ARM.ResourceGroup.Location)'
+                    templateLocation: 'Linked artifact'
+                    csmFile: 'Platform/ARM-Templates/StorageAccount/template.json'
+                    csmParametersFile: 'Platform/ARM-Templates/StorageAccount/parameter.json'
+                    overrideParameters: '-storageAccountName "$(VAR_ARM.StorageAccount.Name)" -containerName "$(VAR_ARM.StorageAccount.Container.Name)"'
+                    deploymentMode: 'Incremental'
