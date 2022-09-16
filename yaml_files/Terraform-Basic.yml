@@ -23,24 +23,24 @@ stages:
                   displayName: Install Terraform
                   inputs:
                     terraformVersion: '1.0.9'
-                - task: TerraformTaskV2@2
-                  displayName: Terraform Init
-                  inputs:
-                    provider: 'azurerm'
-                    command: 'init'
-                    workingDirectory: 'Platform/Terraform-Basic'
-                    backendServiceArm: 'sp-devops-pipeline'
-                    backendAzureRmResourceGroupName: '$(VAR_ARM.ResourceGroup.Name)'
-                    backendAzureRmStorageAccountName: '$(VAR_ARM.StorageAccount.Name)'
-                    backendAzureRmContainerName: '$(VAR_ARM.StorageAccount.Container.Name)'
-                    backendAzureRmKey: 'basic.tfstate'
-                - task: TerraformTaskV2@2
-                  displayName: Terraform Plan
-                  inputs:
-                    provider: 'azurerm'
-                    command: 'plan'
-                    workingDirectory: 'Platform/Terraform-Basic'
-                    environmentServiceNameAzureRM: 'sp-devops-pipeline'
+                # - task: TerraformTaskV2@2
+                #   displayName: Terraform Init
+                #   inputs:
+                #     provider: 'azurerm'
+                #     command: 'init'
+                #     workingDirectory: 'Platform/Terraform-Basic'
+                #     backendServiceArm: 'sp-devops-pipeline'
+                #     backendAzureRmResourceGroupName: '$(VAR_ARM.ResourceGroup.Name)'
+                #     backendAzureRmStorageAccountName: '$(VAR_ARM.StorageAccount.Name)'
+                #     backendAzureRmContainerName: '$(VAR_ARM.StorageAccount.Container.Name)'
+                #     backendAzureRmKey: 'basic.tfstate'
+                # - task: TerraformTaskV2@2
+                #   displayName: Terraform Plan
+                #   inputs:
+                #     provider: 'azurerm'
+                #     command: 'plan'
+                #     workingDirectory: 'Platform/Terraform-Basic'
+                #     environmentServiceNameAzureRM: 'sp-devops-pipeline'
                 - task: TerraformTaskV2@2
                   displayName: Terraform Apply
                   inputs:
@@ -48,10 +48,10 @@ stages:
                     command: 'apply'
                     workingDirectory: 'Platform/Terraform-Basic'
                     environmentServiceNameAzureRM: 'sp-devops-pipeline'
-                # - task: TerraformTaskV2@2
-                #   displayName: Terraform Destroy
-                #   inputs:
-                #     provider: 'azurerm'
-                #     command: 'destroy'
-                #     workingDirectory: 'Platform/Terraform-Basic'
-                #     environmentServiceNameAzureRM: 'sp-devops-pipeline'
+                - task: TerraformTaskV2@2
+                  displayName: Terraform Destroy
+                  inputs:
+                    provider: 'azurerm'
+                    command: 'destroy'
+                    workingDirectory: 'Platform/Terraform-Basic'
+                    environmentServiceNameAzureRM: 'sp-devops-pipeline'
