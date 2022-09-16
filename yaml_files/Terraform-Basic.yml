@@ -30,9 +30,9 @@ stages:
                     command: 'init'
                     workingDirectory: 'Platform/Terraform-Basic'
                     backendServiceArm: 'sp-devops-pipeline'
-                    backendAzureRmResourceGroupName: '$(VAR_ARMResourceGroup.Name)'
-                    backendAzureRmStorageAccountName: '$(VAR_ARMStorageAccount.Name)'
-                    backendAzureRmContainerName: '$(VAR_ARMStorageAccount.Container.Name)'
+                    backendAzureRmResourceGroupName: '$(VAR_ARM.ResourceGroup.Name)'
+                    backendAzureRmStorageAccountName: '$(VAR_ARM.StorageAccount.Name)'
+                    backendAzureRmContainerName: '$(VAR_ARM.StorageAccount.Container.Name)'
                     backendAzureRmKey: 'basic.tfstate'
                 - task: TerraformTaskV2@2
                   displayName: Terraform Plan
