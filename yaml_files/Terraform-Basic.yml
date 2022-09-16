@@ -40,7 +40,7 @@ stages:
                     provider: 'azurerm'
                     command: 'plan'
                     workingDirectory: 'Platform/Terraform-Basic'
-                #     environmentServiceNameAzureRM: 'sp-devops-pipeline'
+                    environmentServiceNameAzureRM: 'sp-devops-pipeline'
                 - task: TerraformTaskV2@2
                   displayName: Terraform Apply
                   inputs:
