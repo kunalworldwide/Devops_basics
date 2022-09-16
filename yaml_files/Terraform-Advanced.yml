@@ -12,7 +12,7 @@ stages:
         displayName: Deploy Dev Infrastructure
         environment: Dev
         variables:
-          - group: var_arm
+          - group: var_var_arm
           - group: Common
           - group: Dev
         strategy:
@@ -41,10 +41,10 @@ stages:
                     provider: 'azurerm'
                     command: 'init'
                     workingDirectory: 'Platform/Terraform-Advanced'
-                    backendServiceArm: 'sp-devops-pipeline'
-                    backendAzureRmResourceGroupName: '$(ARM.ResourceGroup.Name)'
-                    backendAzureRmStorageAccountName: '$(ARM.StorageAccount.Name)'
-                    backendAzureRmContainerName: '$(ARM.StorageAccount.Container.Name)'
+                    backendServicevar_arm: 'sp-devops-pipeline'
+                    backendAzureRmResourceGroupName: '$(var_arm.ResourceGroup.Name)'
+                    backendAzureRmStorageAccountName: '$(var_arm.StorageAccount.Name)'
+                    backendAzureRmContainerName: '$(var_arm.StorageAccount.Container.Name)'
                     backendAzureRmKey: '$(TerraformState.Name)'
                 - task: TerraformTaskV2@2
                   displayName: Terraform Plan
@@ -78,7 +78,7 @@ stages:
         displayName: Deploy Test Infrastructure
         environment: Tst
         variables:
-          - group: ARM
+          - group: var_arm
           - group: Common
           - group: Tst
         strategy:
@@ -107,10 +107,10 @@ stages:
                     provider: 'azurerm'
                     command: 'init'
                     workingDirectory: 'Platform/Terraform-Advanced'
-                    backendServiceArm: 'sp-devops-pipeline'
-                    backendAzureRmResourceGroupName: '$(ARM.ResourceGroup.Name)'
-                    backendAzureRmStorageAccountName: '$(ARM.StorageAccount.Name)'
-                    backendAzureRmContainerName: '$(ARM.StorageAccount.Container.Name)'
+                    backendServicevar_arm: 'sp-devops-pipeline'
+                    backendAzureRmResourceGroupName: '$(var_arm.ResourceGroup.Name)'
+                    backendAzureRmStorageAccountName: '$(var_arm.StorageAccount.Name)'
+                    backendAzureRmContainerName: '$(var_arm.StorageAccount.Container.Name)'
                     backendAzureRmKey: '$(TerraformState.Name)'
                 - task: TerraformTaskV2@2
                   displayName: Terraform Plan
