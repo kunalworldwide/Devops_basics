@@ -8,7 +8,7 @@ stages:
   - stage: Dev
     displayName: 'Dev'
     variables:
-      - group: ARM
+      - group: var_arm
     jobs:
       - deployment: PreRequisites
         displayName: 'Deploy Pre-Requisite Infrastructure'
