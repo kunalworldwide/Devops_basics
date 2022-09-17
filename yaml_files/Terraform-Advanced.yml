@@ -72,7 +72,7 @@ stages:
                 #     workingDirectory: 'Platform/Terraform-Advanced'
                 #     environmentServiceNameAzureRM: 'sp-devops-pipeline'
   - stage: Test
-    dependsOn: ''
+    # dependsOn: ''
     displayName: Tst
     jobs:
       - deployment: Deploy
@@ -138,7 +138,7 @@ stages:
                 #     commandOptions: '--var-file="$(System.DefaultWorkingDirectory)/Platform/Terraform-Advanced/parameter.json'
                 #     environmentServiceNameAzureRM: 'sp-devops-pipeline'
   - stage: Deletion
-    dependsOn: ''
+    # dependsOn: ''
     displayName: delete
     jobs:
       - deployment: Deploy
