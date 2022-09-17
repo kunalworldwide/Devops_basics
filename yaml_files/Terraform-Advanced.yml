@@ -137,3 +137,40 @@ stages:
                 #     workingDirectory: 'Platform/Terraform-Advanced'
                 #     commandOptions: '--var-file="$(System.DefaultWorkingDirectory)/Platform/Terraform-Advanced/parameter.json'
                 #     environmentServiceNameAzureRM: 'sp-devops-pipeline'
+  - stage: Deletion
+    displayName: delete
+    jobs:
+      - deployment: Deploy
+        displayName: Deploy Dev Infrastructure
+        environment: delete
+        variables:
+          - group: var_arm
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+
+                - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
+                  displayName: Install Terraform
+                  inputs:
+                    terraformVersion: '1.0.9'
+                - task: TerraformTaskV2@2
+                  displayName: Terraform Init
+                  inputs:
+                    provider: 'azurerm'
+                    command: 'init'
+                    workingDirectory: 'Platform/Terraform-Advanced'
+                    backendServiceARM: 'sp-devops-pipeline'
+                    backendAzureRmResourceGroupName: '$(VAR_ARM.ResourceGroup.Name)'
+                    backendAzureRmStorageAccountName: '$(VAR_ARM.StorageAccount.Name)'
+                    backendAzureRmContainerName: '$(VAR_ARM.StorageAccount.Container.Name)'
+                    backendAzureRmKey: '$(TerraformState.Name)'
+                - task: TerraformTaskV2@2
+                  displayName: Terraform Destroy
+                  inputs:
+                    provider: 'azurerm'
+                    command: 'destroy'
+                    commandOptions: '--var-file="$(System.DefaultWorkingDirectory)/Platform/Terraform-Advanced/parameter.json'
+                    workingDirectory: 'Platform/Terraform-Advanced'
+                    environmentServiceNameAzureRM: 'sp-devops-pipeline'
