@@ -138,6 +138,7 @@ stages:
                 #     commandOptions: '--var-file="$(System.DefaultWorkingDirectory)/Platform/Terraform-Advanced/parameter.json'
                 #     environmentServiceNameAzureRM: 'sp-devops-pipeline'
   - stage: Deletion
+    dependsOn: ''
     displayName: delete
     jobs:
       - deployment: Deploy
@@ -146,7 +147,6 @@ stages:
         variables:
           - group: var_arm
           - group: Common
-          - group: Dev
         strategy:
           runOnce:
             deploy:
