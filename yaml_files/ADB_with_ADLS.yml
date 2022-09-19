@@ -1,0 +1,55 @@
+trigger:
+- none
+
+pool:
+  vmImage: 'windows-latest'
+
+stages:
+  - stage: Test
+    displayName: Tst
+    jobs:
+      - deployment: Deploy
+        displayName: Deploy Databricks and Data Lake files
+        environment: Tst
+        variables:          
+          - group: Common
+          - group: Tst
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+              - checkout: self              
+              - task: AzureCLI@2
+                displayName: 'Upload files into Data Lake'
+                inputs:
+                  azureSubscription: 'sp-devops-pipeline'
+                  scriptType: 'ps'
+                  scriptLocation: 'inlineScript'
+                  inlineScript: |                                        
+                    az storage blob upload-batch -s "Platform/DataLake/" -d "bronze/" --account-name $(DataLake.Name) --auth-mode login
+              - task: databricksDeployScripts@0
+                displayName: 'Deploy Databricks notebooks'
+                inputs:
+                  authMethod: 'servicePrincipal'
+                  applicationId: '$(DevOps.ServicePrincipal.AppId)'
+                  spSecret: '$(DevOps.ServicePrincipal.Secret)'
+                  resourceGroup: '$(ResourceGroup.Name)'
+                  workspace: '$(Databricks.Name)'
+                  subscriptionId: '$(Subscription.Id)'
+                  tenantId: '$(Tenant.Id)'
+                  region: '$(ResourceGroup.Location)'
+                  localPath: 'Platform/Databricks/notebooks'
+                  databricksPath: '/notebooks'
+              - task: databricksDeployDBFSFilesTask@0
+                displayName: 'Deploy Databricks files into Databricks File System (DBFS)'
+                inputs:
+                  authMethod: 'servicePrincipal'
+                  applicationId: '$(DevOps.ServicePrincipal.AppId)'
+                  spSecret: '$(DevOps.ServicePrincipal.Secret)'
+                  resourceGroup: '$(ResourceGroup.Name)'
+                  workspace: '$(Databricks.Name)'
+                  subscriptionId: '$(Subscription.Id)'
+                  tenantId: '$(Tenant.Id)'
+                  region: '$(ResourceGroup.Location)'
+                  LocalRootFolder: 'Platform/Databricks/dbfs-files'  
+                  TargetLocation: '/dbfs-files'
