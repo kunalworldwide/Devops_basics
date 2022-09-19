@@ -112,7 +112,7 @@ stages:
                     backendAzureRmResourceGroupName: '$(VAR_ARM.ResourceGroup.Name)'
                     backendAzureRmStorageAccountName: '$(VAR_ARM.StorageAccount.Name)'
                     backendAzureRmContainerName: '$(VAR_ARM.StorageAccount.Container.Name)'
-                #     backendAzureRmKey: '$(TerraformState.Name)'
+                    backendAzureRmKey: '$(TerraformState.Name)'
                 # - task: TerraformTaskV2@2
                 #   displayName: Terraform Plan
                 #   inputs:
