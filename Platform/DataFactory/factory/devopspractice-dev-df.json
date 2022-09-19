@@ -1,0 +1,9 @@
+{
+	"name": "devopspractice-dev-df",
+	"location": "uksouth",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "6a771ff3-8cb7-45bf-8862-7f6a1f91117a",
+		"tenantId": "8126b244-9603-49e0-82ac-662307cdc844"
+	}
+}

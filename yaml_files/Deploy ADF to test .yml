@@ -1,0 +1,65 @@
+trigger:
+- none
+
+pool:
+  vmImage: 'windows-latest'
+
+stages:
+  - stage: Test
+    displayName: Test
+    jobs:
+      - deployment: Deploy
+        displayName: Deploy Data Factory Codes
+        environment: Tst
+        variables:          
+          - group: var_arm
+          - group: Common
+          - group: Tst
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+              - checkout: self              
+              - task: NodeTool@0
+                displayName: 'Pre-requisite for ADF build: Install Node.js'
+                inputs:
+                  versionSpec: '10.x'                
+              - task: Npm@1
+                displayName: 'Pre-requisite for ADF build: Install npm package'
+                inputs:
+                  command: 'install'
+                  verbose: true             
+              - task: Npm@1
+                displayName: 'Validate and Build ADF ARM templates'
+                inputs:
+                  command: 'custom'
+                  customCommand: 'run build export Platform/DataFactory /subscriptions/$(VAR_ARM.Subscription.Id)/resourceGroups/devopspractice-dev-rg/providers/Microsoft.DataFactory/factories/devopspractice-dev-df "DataFactoryArmTemplate"'
+              - task: AzurePowerShell@5
+                displayName: 'Stop ADF Triggers before deployment'
+                inputs:
+                  azureSubscription: 'sp-devops-pipeline'
+                  ScriptPath: '$(Build.Repository.LocalPath)/DataFactoryArmTemplate/PrePostDeploymentScript.ps1'
+                  ScriptArguments: '-armTemplate "$(Build.Repository.LocalPath)/DataFactoryArmTemplate/ARMTemplateForFactory.json" -ResourceGroupName $(ResourceGroup.Name) -DataFactoryName $(DataFactory.Name) -predeployment $true -deleteDeployment $false'
+                  azurePowerShellVersion: LatestVersion           
+              - task: AzureResourceManagerTemplateDeployment@3
+                displayName: 'Deploy ADF pipelines / dataset / linked services'
+                inputs:
+                  deploymentScope: 'Resource Group'
+                  azureResourceManagerConnection: 'sp-devops-pipeline'
+                  subscriptionId: '$(VAR_ARM.Subscription.Id)'
+                  action: 'Create Or Update Resource Group'
+                  resourceGroupName: '$(ResourceGroup.Name)'
+                  location: '$(ResourceGroup.Location)'
+                  csmFile: '$(Build.Repository.LocalPath)/DataFactoryArmTemplate/ARMTemplateForFactory.json'
+                  csmParametersFile: '$(Build.Repository.LocalPath)/DataFactoryArmTemplate/ARMTemplateParametersForFactory.json'
+                  overrideParameters: '
+                    -factoryName $(DataFactory.Name)                     
+                    -AzureDataLakeStorage1_properties_typeProperties_url "https://$(DataLake.Name).dfs.core.windows.net"'
+                  deploymentMode: 'Incremental'
+              - task: AzurePowerShell@5
+                displayName: 'Start ADF Triggers'
+                inputs:
+                  azureSubscription: 'sp-devops-pipeline'
+                  ScriptPath: '$(Build.Repository.LocalPath)/DataFactoryArmTemplate/PrePostDeploymentScript.ps1'
+                  ScriptArguments: '-armTemplate "$(Build.Repository.LocalPath)/DataFactoryArmTemplate/ARMTemplateForFactory.json" -ResourceGroupName $(ResourceGroup.Name) -DataFactoryName $(DataFactory.Name) -predeployment $false -deleteDeployment $true'
+                  azurePowerShellVersion: LatestVersion
