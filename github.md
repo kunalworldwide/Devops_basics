@@ -76,6 +76,5 @@ In the modern era of software development, understanding how to effectively use 
 
    Webhooks allow you to set up automatic notifications when specific events occur in your repository. This can help keep you informed about the state of your project and respond quickly to changes.
 
-Next: [Typical Use of Git and GitHub](https://kbroman.org/github_tutorial/pages/init.html)
 
 By mastering these tools and techniques, you'll be well-equipped to manage private repositories in an enterprise setting. Whether you're a seasoned developer or just starting out, GitHub offers a wealth of features to streamline your workflow and enhance collaboration.
