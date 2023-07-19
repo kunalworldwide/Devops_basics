@@ -32,7 +32,7 @@ In the modern era of software development, understanding how to effectively use 
 
 1. **Establish SSH Connection**
 
-   Security is paramount when working with code, especially in an enterprise setting. SSH, or Secure Shell, is a protocol that provides a secure channel between your local machine and GitHub. You can follow this [comprehensive guide](https://github.com/rdpeng/ProgrammingAssignment2) for setting up password-less logins. GitHub also provides a [detailed guide](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) for generating SSH keys.
+   Security is paramount when working with code, especially in an enterprise setting. SSH, or Secure Shell, is a protocol that provides a secure channel between your local machine and GitHub. You can follow this [comprehensive guide](https://www.cyberithub.com/how-to-setup-passwordless-authentication-for-git-push-in-github/) for setting up password-less logins. GitHub also provides a [detailed guide](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) for generating SSH keys.
 
    Check if you have the files ~/.ssh/id_rsa and ~/.ssh/id_rsa.pub. If not, create these public/private keys:
 
